@@ -10,10 +10,12 @@ def archiveQEMU(String target) {
   
 cheribuildProject(target: 'qemu', cpu: 'native', skipArtifacts: true,
       buildStage: "Build Linux", nodeLabel: 'linux', noIncrementalBuild: true,
-      extraArgs: '--unified-sdk --without-sdk --install-prefix=/usr',
+      beforeBuild: "git -C qemu fetch; git -C qemu checkout origin/qemu-cheri; git -C qemu show HEAD",
+      extraArgs: '--unified-sdk --without-sdk --install-prefix=/usr --qemu/legacy-registers',
       skipTarball: true, afterBuild: archiveQEMU('linux'))
 
 cheribuildProject(target: 'qemu', cpu: 'native', skipArtifacts: true,
       buildStage: "Build FreeBSD", nodeLabel: 'freebsd', noIncrementalBuild: true,
-      extraArgs: '--unified-sdk --without-sdk --install-prefix=/usr',
+      beforeBuild: "git -C qemu fetch; git -C qemu checkout origin/qemu-cheri; git -C qemu show HEAD",
+      extraArgs: '--unified-sdk --without-sdk --install-prefix=/usr --qemu/legacy-registers',
       skipTarball: true, afterBuild: archiveQEMU('freebsd'))
